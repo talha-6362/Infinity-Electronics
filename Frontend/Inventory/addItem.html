@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Inventory Item</title>
+  <link rel="stylesheet" href="Styles/addItem.css">
+  <link rel="stylesheet" href="Styles/navbar.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="brand">Infinity Electronics</div>
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  <div class="nav-actions" id="navLinks">
+    <a href="AddItem.html" class="active">Add Item</a>
+    <a href="viewInventory.html">View Inventory</a>
+    <a href="../login.html" class="logout">Logout</a>
+  </div>
+</nav>
+
+<div class="container">
+  <h2>Add New Product</h2>
+
+  <form id="addItemForm" class="form">
+    <div class="form-group">
+      <label for="itemName">Product Name</label>
+      <input type="text" id="itemName" required>
+    </div>
+
+    <div class="form-group">
+      <label for="itemModel">Model</label>
+      <input type="text" id="itemModel" required>
+    </div>
+
+    <div class="form-group">
+      <label for="itemImage">Upload Product Image</label>
+      <input type="file" id="itemImage" accept="image/*" required>
+    </div>
+
+    <div class="form-group">
+      <label for="itemCategory">Category</label>
+      <select id="itemCategory" required>
+        <option value="">Select Category</option>
+        <option value="Fan">Fan</option>
+        <option value="Mobile">Mobile</option>
+        <option value="Refrigerator">Refrigerator</option>
+        <option value="Bike">Bike</option>
+        <option value="Washing Machine">Washing Machine</option>
+        <option value="Dryer">Dryer</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="itemWarranty">Warranty Period</label>
+      <input type="text" id="itemWarranty" required>
+    </div>
+
+    <div class="form-group">
+      <label for="itemUnits">Units</label>
+      <input type="number" id="itemUnits" required>
+    </div>
+
+    <div class="form-group">
+      <label for="itemPrice">Price (PKR)</label>
+      <input type="number" id="itemPrice" required>
+    </div>
+
+    <div class="form-group">
+      <label for="itemDescription">Description</label>
+      <textarea id="itemDescription" rows="3" required></textarea>
+    </div>
+
+    <button type="submit" id="formBtn" class="btn">Add Item</button>
+  </form>
+</div>
+
+<script>
+document.getElementById("addItemForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById("itemName").value.trim();
+  const model = document.getElementById("itemModel").value.trim();
+  const category = document.getElementById("itemCategory").value.trim();
+  const warranty = document.getElementById("itemWarranty").value.trim();
+  const units = document.getElementById("itemUnits").value.trim();
+  const price = document.getElementById("itemPrice").value.trim();
+  const description = document.getElementById("itemDescription").value.trim();
+  const imageFile = document.getElementById("itemImage").files[0];
+
+  if (!imageFile) return alert("Please upload an image!");
+
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("model", model);
+  formData.append("category", category);
+  formData.append("warranty", warranty);
+  formData.append("units", units);
+  formData.append("price", price);
+  formData.append("description", description);
+  formData.append("image", imageFile);
+
+  const token = localStorage.getItem("token");
+
+  const res = await fetch("http://localhost:5000/api/products", {
+    method: "POST",
+    headers: { "Authorization": "Bearer " + token },
+    body: formData
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    alert("Product added successfully!");
+    document.getElementById("addItemForm").reset();
+  } else alert(data.message || "Add failed");
+});
+</script>
+</body>
+</html>

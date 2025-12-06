@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finance Reports | Infinity Electronics</title>
+
+  <link rel="stylesheet" href="Styles/financeReport.css" />
+  <link rel="stylesheet" href="Styles/navbar.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="brand">Infinity Electronics</div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-actions" id="navLinks">
+      <a href="financeInstallments.html">Summary</a>
+      <a href="financeReports.html" class="active">Reports</a>
+      <a href="../login.html" class="logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Weekly and Monthly Sales Report</h2>
+
+    <div class="month-filter">
+      <label for="monthSelect">Select Month:</label>
+      <select id="monthSelect" onchange="updateMonthlyChart()"></select>
+    </div>
+
+    <button class="download-btn" onclick="downloadReport()">Download PDF Report</button>
+
+    <div class="summary-cards">
+      <div class="card">
+        <h3>Total Weekly Sales</h3>
+        <p id="totalWeekly">0 PKR</p>
+      </div>
+
+      <div class="card">
+        <h3>Total Monthly Sales</h3>
+        <p id="totalMonthly">0 PKR</p>
+      </div>
+
+      <div class="card">
+        <h3>Top Selling Item</h3>
+        <p id="topItem">---</p>
+      </div>
+    </div>
+
+    <div class="two-column">
+      <div class="column">
+        <h3>Weekly Sales (Pie Chart)</h3>
+        <canvas id="weeklyChart"></canvas>
+      </div>
+
+      <div class="column">
+        <h3>Monthly Sales (Pie Chart)</h3>
+        <canvas id="monthlyChart"></canvas>
+      </div>
+    </div>
+
+    <div class="two-column">
+      <div class="column">
+        <h3>This Week's Sales Summary</h3>
+        <table id="weeklySales">
+          <thead>
+            <tr><th>Product</th><th>Units Sold</th><th>Total Sale</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="column">
+        <h3>This Month's Sales Summary</h3>
+        <table id="monthlySales">
+          <thead>
+            <tr><th>Product</th><th>Units Sold</th><th>Total Sale</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="JsFiles/financeReport.js"></script>
+</body>
+</html>

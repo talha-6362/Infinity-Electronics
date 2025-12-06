@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Availability</title>
+
+  <link rel="stylesheet" href="Styles/inventoryCheck.css">
+  <link rel="stylesheet" href="Styles/navbar.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="brand">Infinity Electronics</div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-actions" id="navLinks">
+      <a href="AddCustomer.html">Add</a>
+      <a href="installments.html">Installments</a>
+      <a href="customers.html">Update Data</a>
+      <a href="inventory.html" class="active">Inventory</a>
+      <a href="../login.html" class="logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Search Product Availability</h2>
+
+    <input type="text" id="productSearch" placeholder="Search product name..." onkeyup="applyFilters()" />
+
+    <div class="filters">
+      <label><input type="checkbox" id="sortPrice" onchange="applyFilters()"> Sort by Price</label>
+      <label><input type="checkbox" id="sortUnits" onchange="applyFilters()"> Sort by Units</label>
+      <label><input type="checkbox" id="sortCategory" onchange="applyFilters()"> Sort by Category</label>
+    </div>
+
+    <p id="noResult"></p>
+
+    <table id="resultTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Model</th>
+          <th>Category</th>
+          <th>Warranty</th>
+          <th>Units</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <script src="Javascript Files/inventoryCheck.js"></script>
+</body>
+</html>

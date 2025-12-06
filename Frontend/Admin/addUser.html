@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management | Admin Panel</title>
+  <link rel="stylesheet" href="Styles/navbar.css">
+  <link rel="stylesheet" href="Styles/addUser.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="brand">Infinity Electronics</div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-actions" id="navLinks">
+      <a href="adminProduct.html">Products</a>
+      <a href="orderManagement.html">Orders</a>
+      <a href="addUser.html" class="active">Users</a>
+      <a href="adminFeedback.html">Feedback</a>
+      <a href="../login.html" class="logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Add New User</h2>
+    <form id="addUserForm" class="form">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" placeholder="Full Name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Email Address" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="text" id="phone" placeholder="Phone Number" required>
+      </div>
+
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" placeholder="City" required>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address</label>
+        <textarea id="address" placeholder="Address" rows="2" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Password" required>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Select Role</label>
+        <select id="role" required>
+          <option value="" disabled selected>Select Role</option>
+          <option value="customer">Customer</option>
+          <option value="employee">Employee</option>
+          <option value="finance">Finance Manager</option>
+          <option value="inventory">Inventory Manager</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <p class="error" id="addError"></p>
+      <button type="submit" class="btn">Add User</button>
+    </form>
+  </div>
+
+  <div class="container promote">
+    <h2>Promote Existing User</h2>
+    <form id="promoteUserForm" class="form">
+      <div class="form-group">
+        <label for="existingUser">Select User</label>
+        <select id="existingUser" required>
+          <option value="">-- Select User --</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="newRole">Assign New Role</label>
+        <select id="newRole" required>
+          <option value="">-- Select New Role --</option>
+          <option value="customer">Customer</option>
+          <option value="employee">Employee</option>
+          <option value="finance">Finance Manager</option>
+          <option value="inventory">Inventory Manager</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+
+      <p class="error" id="promoteError"></p>
+      <button type="submit" class="btn promote-btn">Promote User</button>
+    </form>
+  </div>
+
+  <script src="JsFiles/navbar.js"></script>
+  <script type="module" src="JsFiles/addUser.js"></script>
+</body>
+</html>

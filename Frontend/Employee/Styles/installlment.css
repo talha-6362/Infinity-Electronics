@@ -1,0 +1,168 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f4f7fa;
+  margin: 0;
+  padding: 0;
+}
+
+.main-container {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  height: calc(100vh - 60px);
+  box-sizing: border-box;
+}
+
+.left-panel, .right-panel {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  align-items: stretch;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 22px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card h2 {
+  color: #004d99;
+  margin-top: 0;
+  margin-bottom: 14px;
+  font-size: 20px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d5dbe8;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.form-group input[readonly] {
+  background: #f7f9fc;
+  color: #333;
+}
+
+.hint {
+  display: block;
+  margin-top: 6px;
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.error {
+  color: #d93025;
+  font-size: 13px;
+  margin-top: 6px;
+  display: block;
+}
+
+.btn-save {
+  background: #004d99;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 6px;
+  width: 100%;
+}
+
+.btn-save:hover {
+  background: #0066cc;
+}
+
+.success {
+  margin-top: 10px;
+  color: #0f7a1a;
+  font-weight: 600;
+}
+
+.search-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.search-row input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #d5dbe8;
+  border-radius: 8px;
+}
+
+.btn-clear {
+  background: transparent;
+  border: 1px solid #d5dbe8;
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.table-wrap {
+  max-height: calc(100% - 80px);
+  overflow-y: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+thead th {
+  background: #004d99;
+  color: #fff;
+  padding: 10px 12px;
+  text-align: left;
+  position: sticky;
+  top: 0;
+}
+
+tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eef1f6;
+}
+
+tbody tr:hover {
+  background: #f7fbff;
+  cursor: pointer;
+}
+
+.no-results {
+  margin-top: 12px;
+  color: #6c757d;
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .main-container {
+    flex-direction: column;
+    height: auto;
+    padding: 14px;
+  }
+
+  .table-wrap {
+    max-height: 300px;
+  }
+}

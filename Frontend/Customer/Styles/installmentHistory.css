@@ -1,0 +1,95 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background-color: #f4f6f9;
+  color: #333;
+}
+
+.container {
+  padding: 30px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+h2 {
+  text-align: center;
+  color: #0073e6;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.search-box {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.search-box input {
+  padding: 10px;
+  width: 250px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin: 0 10px;
+}
+
+.search-box button {
+  background: #0073e6;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.search-box button:hover {
+  background: #005bb5;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.table-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background: #004d99;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .search-box input {
+    width: 70%;
+  }
+
+  table, th, td {
+    font-size: 14px;
+  }
+}
+
+footer {
+  background: linear-gradient(90deg, #004d99, #0073e6);
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-size: 15px;
+}

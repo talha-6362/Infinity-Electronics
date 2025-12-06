@@ -1,0 +1,57 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f4f7fa;
+  margin: 0;
+  padding: 0;
+}
+
+
+.container {
+  max-width: 90%;
+  margin: auto;
+  padding: 15px;
+}
+
+form input,
+form select {
+  border-radius: 8px !important;
+}
+
+h5 {
+  font-weight: 600;
+  color: #333;
+}
+
+button {
+  border-radius: 10px !important;
+  transition: 0.3s;
+}
+
+button:hover {
+  background-color: #0b5ed7 !important;
+  transform: scale(1.05);
+}
+
+.error {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  display: block;
+}
+
+
+
+@media (max-width: 900px) {
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  form input,
+  form select {
+    font-size: 0.9rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+  }
+}

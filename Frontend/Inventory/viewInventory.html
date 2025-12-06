@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Availability | Infinity Electronics</title>
+  <link rel="stylesheet" href="Styles/viewInventory.css">
+  <link rel="stylesheet" href="Styles/navbar.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="brand">Infinity Electronics</div>
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  <div class="nav-actions" id="navLinks">
+    <a href="AddItem.html">Add Item</a>
+    <a href="viewInventory.html" class="active">View Inventory</a>
+    <a href="../login.html" class="logout">Logout</a>
+  </div>
+</nav>
+
+<div class="container">
+  <h2>Product Inventory</h2>
+
+  <div class="search-sort">
+    <input type="text" id="productSearch" placeholder="Search by product name..." />
+
+    <div class="sort-options">
+      <label><input type="radio" name="sort" value="priceAsc"> Price: Low to High</label>
+      <label><input type="radio" name="sort" value="priceDesc"> Price: High to Low</label>
+      <label><input type="radio" name="sort" value="stockAsc"> Stock: Low to High</label>
+      <label><input type="radio" name="sort" value="stockDesc"> Stock: High to Low</label>
+      <label><input type="radio" name="sort" value="none" checked> None</label>
+    </div>
+  </div>
+
+  <p id="noResult"></p>
+
+  <table id="resultTable">
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Category</th>
+        <th>Price (PKR)</th>
+        <th>Stock</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<script src="JsFiles/viewInventory.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Update Customer Details | Infinity Electronics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="Styles/navbar.css">
+  <link rel="stylesheet" href="Styles/customerUpdate.css">
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="brand">Infinity Electronics</div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-actions" id="navLinks">
+      <a href="AddCustomer.html">Add</a>
+      <a href="installments.html">Installments</a>
+      <a href="customers.html" class="active">Update Data</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="../login.html" class="logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Search & Update Customer Details</h2>
+
+    <div class="search-section">
+      <label>Enter Account Number</label>
+      <input type="text" id="searchAccount" placeholder="Enter account number">
+      <small class="error" id="searchError"></small>
+      <button id="searchBtn">Search</button>
+    </div>
+
+    <form id="updateForm" style="display:none;">
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Customer Name</label>
+          <input type="text" id="custName">
+          <small class="error" id="custNameError"></small>
+        </div>
+
+        <div class="form-group">
+          <label>Customer Phone</label>
+          <input type="text" id="custPhone">
+          <small class="error" id="custPhoneError"></small>
+        </div>
+
+        <div class="form-group">
+          <label>Customer CNIC</label>
+          <input type="text" id="custCNIC">
+          <small class="error" id="custCNICError"></small>
+        </div>
+
+        <div class="form-group">
+          <label>Item Purchased</label>
+          <input type="text" id="custItem" readonly>
+        </div>
+
+      </div>
+
+      <div class="btn-center">
+        <button type="submit" class="submit-btn">Update Details</button>
+      </div>
+    </form>
+  </div>
+
+  <script type="module" src="Javascript Files/customersUpdate.js"></script>
+
+</body>
+</html>

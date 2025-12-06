@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Insert Customer Details</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="Styles/AddCustomer.css">
+  <link rel="stylesheet" href="Styles/navbar.css">
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="brand">Infinity Electronics</div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-actions" id="navLinks">
+      <a href="AddCustomer.html" class="active">Add</a>
+      <a href="installments.html">Installments</a>
+      <a href="customers.html">Update Data</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="../login.html" class="logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container mt-5 mb-5 p-4 rounded shadow bg-light">
+
+    <h2 class="text-center mb-4 text-primary fw-bold">Insert Customer Details</h2>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold">Enter Customer CNIC or Phone</label>
+      <input type="text" id="searchCustomer" class="form-control" placeholder="Enter CNIC or Phone">
+      <small id="searchError" class="text-danger"></small>
+    </div>
+
+    <form id="saleForm" novalidate>
+
+      <h5 class="text-secondary mb-3 fw-semibold">Customer Details</h5>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Account Number</label>
+          <input type="text" id="accountNo" class="form-control" readonly>
+          <small class="error" id="accountNoError"></small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Customer Name</label>
+          <input type="text" id="custName" class="form-control" required>
+          <small class="error" id="custNameError"></small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Customer Phone</label>
+          <input type="text" id="custPhone" class="form-control" required>
+          <small class="error" id="custPhoneError"></small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Customer CNIC</label>
+          <input type="text" id="custCNIC" class="form-control" required>
+          <small class="error" id="custCNICError"></small>
+        </div>
+
+        <div class="col-md-12">
+          <label class="form-label">Customer Address</label>
+          <input type="text" id="custAddress" class="form-control" required>
+          <small class="error" id="custAddressError"></small>
+        </div>
+      </div>
+
+      <hr class="my-4">
+
+      <h5 class="text-secondary mb-3 fw-semibold">Product & Payment Details</h5>
+      <div class="row g-3">
+
+        <div class="col-md-6">
+          <label class="form-label">Product Name</label>
+          <select id="productName" class="form-select" required></select>
+          <small class="error" id="productNameError"></small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Product Price</label>
+          <input type="number" id="productPrice" class="form-control" readonly>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Advance Payment (5%)</label>
+          <input type="number" id="advancePayment" class="form-control" readonly>
+          <small class="error" id="advancePaymentError"></small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Monthly Installment</label>
+          <input type="number" id="monthlyInstallment" class="form-control" readonly>
+        </div>
+
+      </div>
+
+      <hr class="my-4">
+
+      <h5 class="text-secondary mb-3 fw-semibold">Witness Details</h5>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Witness Name</label>
+          <input type="text" id="witnessName" class="form-control" required>
+          <small class="error" id="witnessNameError"></small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Witness Phone</label>
+          <input type="text" id="witnessPhone" class="form-control" required>
+          <small class="error" id="witnessPhoneError"></small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Witness CNIC</label>
+          <input type="text" id="witnessCNIC" class="form-control" required>
+          <small class="error" id="witnessCNICError"></small>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Witness Address</label>
+          <input type="text" id="witnessAddress" class="form-control" required>
+          <small class="error" id="witnessAddressError"></small>
+        </div>
+      </div>
+
+      <div class="text-center mt-5">
+        <button type="submit" class="btn btn-primary px-4 py-2 fw-bold">Submit</button>
+      </div>
+
+    </form>
+
+  </div>
+
+  <script type="module" src="Javascript Files/AddCustomer.js"></script>
+</body>
+
+</html>

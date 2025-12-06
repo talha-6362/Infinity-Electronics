@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Record Installment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="Styles/installlment.css">
+  <link rel="stylesheet" href="Styles/navbar.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="brand">Infinity Electronics</div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-actions" id="navLinks">
+      <a href="AddCustomer.html">Add</a>
+      <a href="installments.html" class="active">Installments</a>
+      <a href="customers.html">Update Data</a>
+      <a href="inventory.html">Inventory</a>
+      <a href="../login.html" class="logout">Logout</a>
+    </div>
+  </nav>
+
+  <main class="main-container">
+    <section class="left-panel">
+      <div class="card">
+        <h2>Record Payment</h2>
+
+        <form id="installmentForm">
+          <div class="form-group">
+            <label for="accountNumber">Account Number</label>
+            <input type="text" id="accountNumber" placeholder="Enter account number" autocomplete="off" />
+            <small class="hint">Type account number or click a row on the right</small>
+            <small class="error" id="accountNumberError"></small>
+          </div>
+
+          <div class="form-group">
+            <label for="customerName">Customer Name</label>
+            <input type="text" id="customerName" readonly />
+          </div>
+
+          <div class="form-group">
+            <label for="remainingAmount">Remaining Amount (PKR)</label>
+            <input type="text" id="remainingAmount" readonly />
+          </div>
+
+          <div class="form-group">
+            <label for="installmentAmount">Installment Amount (PKR)</label>
+            <input type="number" id="installmentAmount" placeholder="Enter installment amount" />
+            <small class="error" id="installmentAmountError"></small>
+          </div>
+
+          <button type="submit" class="btn-save">Save Record</button>
+          <div id="successMsg" class="success" style="display:none;">Record saved (demo only).</div>
+        </form>
+      </div>
+    </section>
+
+    <aside class="right-panel">
+      <div class="card">
+        <h2>Customer List</h2>
+
+        <div class="search-row">
+          <input type="text" id="searchName" placeholder="Search customer by name..." />
+          <button id="clearSearch" class="btn-clear" title="Clear">Clear</button>
+        </div>
+
+        <div class="table-wrap">
+          <table id="customerTable">
+            <thead>
+              <tr>
+                <th>Account #</th>
+                <th>Name</th>
+                <th>Remaining (PKR)</th>
+                <th>Minimum Installment (PKR)</th>
+
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div id="noResults" class="no-results" style="display:none;">No matches found.</div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script type="module" src="Javascript Files/installment.js"></script>
+</body>
+</html>

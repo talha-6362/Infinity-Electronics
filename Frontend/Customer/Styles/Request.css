@@ -1,0 +1,33 @@
+body {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  background-color: #f4f6f9;
+  color: #333;
+}
+
+.container {
+  max-width: 900px;
+}
+
+h2 {
+  text-align: center;
+  color: #0073e6;
+  font-weight: 700;
+}
+
+footer {
+  background: linear-gradient(90deg, #004d99, #0073e6);
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-size: 15px;
+}
+
+@media(max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+  h2 {
+    font-size: 1.8rem;
+  }
+}

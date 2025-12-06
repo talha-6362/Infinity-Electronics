@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Management | Admin Panel</title>
+  <link rel="stylesheet" href="Styles/navbar.css">
+  <link rel="stylesheet" href="Styles/orderManage.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="brand">Infinity Electronics</div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-actions" id="navLinks">
+      <a href="adminProduct.html">Products</a>
+      <a href="orderManagement.html" class="active">Orders</a>
+      <a href="addUser.html">Users</a>
+      <a href="adminFeedback.html">Feedback</a>
+      <a href="../login.html" class="logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="chart-section">
+    <div class="chart-card">
+      <h2>Order Status Overview</h2>
+      <canvas id="orderChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h2>Total Price by Status</h2>
+      <canvas id="priceChart"></canvas>
+    </div>
+  </div>
+
+  <section class="order-container">
+    <h1>Customer Requests</h1>
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th>Request ID</th>
+          <th>Customer Name</th>
+          <th>Product</th>
+          <th>Model</th>
+          <th>Price</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="orderTableBody">
+        <tr><td colspan="7">Loading requests...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <script type="module" src="JsFiles/orderManage.js"></script>
+  <script src="JsFiles/navbar.js"></script>
+</body>
+</html>

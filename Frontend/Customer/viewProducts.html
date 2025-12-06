@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Infinity Electronics | Products</title>
+  <link rel="stylesheet" href="Styles/viewProducts.css">
+  <link rel="stylesheet" href="Styles/navbar.css">
+  <link rel="stylesheet" href="Styles/hero.css">
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="brand">Infinity Electronics</div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-actions" id="navLinks">
+      <a href="viewProducts.html" class="active">Home</a>
+      <a href="Request.html">Request</a>
+      <a href="installmentHistory.html">History</a>
+      <a href="../login.html" class="logout">Logout</a>
+    </div>
+  </nav>
+
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <h1>Upgrade Your Home with Infinity Electronics</h1>
+      <p>Explore the latest products — easy installments and trusted quality!</p>
+      <a href="#products" class="btn">Explore Now</a>
+    </div>
+
+    <button class="hero-btn left" id="prevBtn">&#10094;</button>
+    <button class="hero-btn right" id="nextBtn">&#10095;</button>
+  </section>
+
+  <script src="JsFiles/hero.js"></script>
+
+  <div class="main-content">
+
+    <aside class="sidebar">
+      <h3>Categories</h3>
+      <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchProducts()">
+      <ul>
+        <li><a href="#fans">Fans</a></li>
+        <li><a href="#refrigerators">Refrigerators</a></li>
+        <li><a href="#mobiles">Mobiles</a></li>
+        <li><a href="#bikes">Bikes</a></li>
+        <li><a href="#washing">Washing Machines</a></li>
+        <li><a href="#dryers">Dryer Machines</a></li>
+      </ul>
+    </aside>
+
+    <section class="products" id="products">
+      <h2>Our Latest Products</h2>
+
+      <div id="fans" class="product-category">
+        <h3>Fans</h3>
+        <div class="product-grid" id="fansGrid"></div>
+      </div>
+
+      <div id="refrigerators" class="product-category">
+        <h3>Refrigerators</h3>
+        <div class="product-grid" id="refrigeratorsGrid"></div>
+      </div>
+
+      <div id="mobiles" class="product-category">
+        <h3>Mobiles</h3>
+        <div class="product-grid" id="mobilesGrid"></div>
+      </div>
+
+      <div id="bikes" class="product-category">
+        <h3>Bikes</h3>
+        <div class="product-grid" id="bikesGrid"></div>
+      </div>
+
+      <div id="washing" class="product-category">
+        <h3>Washing Machines</h3>
+        <div class="product-grid" id="washingGrid"></div>
+      </div>
+
+      <div id="dryers" class="product-category">
+        <h3>Dryer Machines</h3>
+        <div class="product-grid" id="dryersGrid"></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="feedback">
+    <div class="feedback-header" onclick="toggleFeedback()">
+      <h2>Share Your Experience</h2>
+      <span class="arrow">&#9656;</span>
+    </div>
+
+    <div class="feedback-content" id="feedbackContent">
+      <p>We’d love to hear your thoughts and suggestions.</p>
+      <form class="feedback-form">
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" id="fbEmail" placeholder="Your Email" required>
+        <textarea placeholder="Your Feedback..." rows="4" required></textarea>
+        <button type="submit">Submit Feedback</button>
+        <p class="thank-msg" style="display:none;">Thank you for your feedback!</p>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Infinity Electronics</p>
+  </footer>
+
+  <script type="module" src="JsFiles/viewProducts.js"></script>
+</body>
+</html>

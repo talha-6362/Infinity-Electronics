@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Requests | Infinity Electronics</title>
+  <link rel="stylesheet" href="Styles/installmentHistory.css">
+  <link rel="stylesheet" href="Styles/navbar.css">
+</head>
+<body>
+  
+  <nav class="navbar">
+    <div class="brand">Infinity Electronics</div>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-actions" id="navLinks">
+      <a href="viewProducts.html">Home</a>
+      <a href="Request.html">Request</a>
+      <a href="installmentHistory.html" class="active">History</a>
+      <a href="../login.html" class="logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>View Your Request History</h2>
+
+    <div class="search-box">
+      <label for="searchInput">Enter Your CNIC:</label>
+      <input type="text" id="searchInput" placeholder="e.g., 35202XXXXXXXXX">
+      <button id="searchBtn">Search</button>
+      <p class="error" id="errorMsg"></p>
+    </div>
+
+    <div class="table-container" id="tableContainer" style="display:none;">
+      <h3>Your Requests</h3>
+      <table id="installmentTable">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Request ID</th>
+            <th>Product</th>
+            <th>Account No</th>
+            <th>  Name</th>
+            
+            
+            <th>Model</th>
+            <th>Price</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Infinity Electronics</p>
+  </footer>
+
+  <script type="module" src="JsFiles/installmentHistory.js"></script>
+</body>
+</html>

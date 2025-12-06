@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Signup | Infinity Electronics</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #004d99, #0073e6);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .signup-container {
+      background: #fff;
+      width: 90%;
+      max-width: 450px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      padding: 40px 30px;
+      text-align: center;
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .signup-header h2 {
+      font-size: 1.8rem;
+      color: #004d99;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .signup-header p {
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 25px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #004d99;
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 77, 153, 0.3);
+    }
+
+    .signup-btn {
+      background: #004d99;
+      color: #fff;
+      width: 100%;
+      border: none;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+
+    .signup-btn:hover {
+      background: #0066cc;
+    }
+
+    .login-text {
+      margin-top: 15px;
+      font-size: 0.95rem;
+    }
+
+    .login-text a {
+      color: #004d99;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .login-text a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    @media (max-width: 480px) {
+      .signup-container {
+        padding: 30px 20px;
+      }
+
+      .signup-header h2 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="signup-container">
+    <div class="signup-header">
+      <h2>Infinity Electronics</h2>
+      <p>Create your account below</p>
+    </div>
+
+    <form id="signupForm" novalidate>
+
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="email" id="email" placeholder="Email Address" required>
+      <input type="text" id="phone" placeholder="Phone Number (e.g., 03001234567)" required>
+      <input type="text" id="city" placeholder="City" required>
+      <textarea id="address" placeholder="Address" rows="2" required></textarea>
+      <input type="password" id="password" placeholder="Create Password" required>
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+
+      <select id="role" required>
+        <option value="" disabled selected>Select Role</option>
+        <option value="customer">Customer</option>
+        <option value="employee">Employee</option>
+        <option value="finance">Finance Manager</option>
+        <option value="inventory">Inventory Manager</option>
+        <option value="admin">Admin</option>
+      </select>
+
+      <p class="error" id="errorMsg"></p>
+      <button type="submit" class="signup-btn">Sign Up</button>
+
+    </form>
+
+    <div class="login-text">
+      <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { apiPost } from "./js/api.js";
+
+    document.getElementById("signupForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const city = document.getElementById("city").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const confirmPassword = document.getElementById("confirmPassword").value.trim();
+      const role = document.getElementById("role").value; 
+      const errorMsg = document.getElementById("errorMsg");
+
+      errorMsg.textContent = "";
+
+      if (!role) return errorMsg.textContent = "Please select a role";
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phonePattern = /^03\d{9}$/;
+
+      if (!emailPattern.test(email)) return errorMsg.textContent = "Enter valid email";
+      if (!phonePattern.test(phone)) return errorMsg.textContent = "Enter valid phone";
+      if (password.length < 4) return errorMsg.textContent = "Password too short";
+      if (password !== confirmPassword) return errorMsg.textContent = "Passwords do not match";
+
+      try {
+        const data = await apiPost("/auth/register", {
+          name,
+          email,
+          phone,
+          city,
+          address,
+          password,
+          role
+        });
+
+        if (data.message === "User registered successfully") {
+          alert("Signup successful!");
+          window.location.href = "login.html";
+        } else {
+          errorMsg.textContent = data.message;
+        }
+      } catch (err) {
+        errorMsg.textContent = "Server error!";
+        console.error(err);
+      }
+    });
+  </script>
+
+</body>
+
+</html>
