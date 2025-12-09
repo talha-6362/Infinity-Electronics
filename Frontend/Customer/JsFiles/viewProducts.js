@@ -6,23 +6,17 @@ function toggleMenu() {
   navLinks.classList.toggle("show");
 }
 
-/* ======================================================
-   🔵 Fetch ALL products (flat array from backend)
-====================================================== */
 async function fetchProducts() {
   try {
     const res = await fetch(`${BASE_URL}/products`);
     if (!res.ok) throw new Error("Failed to fetch products");
-    return await res.json();  // returns array
+    return await res.json();
   } catch (err) {
     console.error("Fetch Products Error:", err);
     return [];
   }
 }
 
-/* ======================================================
-   🟢 Convert array → category-wise grouped object
-====================================================== */
 function groupByCategory(products) {
   const grouped = {
     fans: [],
@@ -47,9 +41,6 @@ function groupByCategory(products) {
   return grouped;
 }
 
-/* ======================================================
-   🟠 Display all category-wise grouped products
-====================================================== */
 function displayProducts(grouped) {
   const categoryIds = {
     fans: "fansGrid",
@@ -68,21 +59,20 @@ function displayProducts(grouped) {
       ? items
           .map(
             (p) => `
-        <div class="product-card">
-  <img src="http://localhost:5000/${p.image}" alt="${p.name}" onerror="this.src='Images/placeholder.png'">
-  <div class="product-info">
-    <h3>${p.name}</h3>
-    <p><b>Model:</b> ${p.model}</p>   <!-- 👈 NEW LINE -->
-    <p><b>Price:</b> PKR ${p.price}</p>
-    <p><b>Warranty:</b> ${p.warranty}</p>
-    <p>${p.description}</p>
-<button onclick="goToRequestPage('${p._id}', '${p.name}', '${p.model}', '${p.price}', '${p.description}')">
-  Request Now
-</button>
-
+  <div class="product-card">
+    <img src="${p.image}" alt="${p.name}" crossOrigin="anonymous" onerror="this.src='Images/placeholder.png'">
+    <div class="product-info">
+      <h3>${p.name}</h3>
+      <p><b>Model:</b> ${p.model}</p>
+      <p><b>Price:</b> PKR ${p.price}</p>
+      <p><b>Warranty:</b> ${p.warranty}</p>
+      <p>${p.description}</p>
+      <button onclick="goToRequestPage('${p._id}', '${p.name}', '${p.model}', '${p.price}', '${p.description}')">
+        Request Now
+      </button>
+    </div>
   </div>
-</div>
- `
+  `
           )
           .join("")
       : "<p>No products available.</p>";
@@ -98,8 +88,6 @@ function goToRequestPage(id, name, model, price, specs) {
 }
 window.goToRequestPage = goToRequestPage;
 
-
-// viewProducts.js ke end me ya start me
 function searchProducts() {
   const input = document.getElementById("searchInput").value.toLowerCase();
   const products = document.querySelectorAll(".product-card");
@@ -110,7 +98,8 @@ function searchProducts() {
     else p.style.display = "none";
   });
 }
-// ===== TOGGLE FEEDBACK FORM =====
+window.searchProducts = searchProducts;
+
 function toggleFeedback() {
   const content = document.getElementById("feedbackContent");
   content.style.display = content.style.display === "block" ? "none" : "block";
@@ -147,14 +136,13 @@ feedbackForm.addEventListener("submit", async e => {
   }
 });
 
-
-
 document.addEventListener("DOMContentLoaded", async () => {
-  const products = await fetchProducts();     
-  const grouped = groupByCategory(products);  
+  const products = await fetchProducts();
+  const grouped = groupByCategory(products);
   displayProducts(grouped);
 });
-window.searchProducts = searchProducts;
-window.goToRequestPage = goToRequestPage;
+
 window.toggleMenu = toggleMenu;
+window.goToRequestPage = goToRequestPage;
 window.searchProducts = searchProducts;
+window.toggleFeedback = toggleFeedback;

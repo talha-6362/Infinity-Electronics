@@ -42,7 +42,7 @@
         <input type="file" id="itemImage" accept="image/*">
         <div id="currentImageContainer" style="margin-top: 10px; display:none;">
           <label>Current Image:</label>
-          <img id="currentImage" src="" alt="Product Image" style="max-width: 150px; display:block; margin-top: 5px;">
+          <img id="currentImage" src="" alt="Product Image" style="max-width: 150px; display:block; margin-top: 5px;" crossOrigin="anonymous">
         </div>
       </div>
 
@@ -91,10 +91,11 @@
   </footer>
 
   <script>
-     function toggleMenu() {
-    const nav = document.getElementById("navLinks");
-    if (nav) nav.classList.toggle("show");
-  }
+    function toggleMenu() {
+      const nav = document.getElementById("navLinks");
+      if (nav) nav.classList.toggle("show");
+    }
+
     const productListContainer = document.getElementById("productList");
 
     document.addEventListener("DOMContentLoaded", loadProducts);
@@ -103,9 +104,8 @@
       e.preventDefault();
 
       const id = document.getElementById("editProductId").value;
-
       const name = document.getElementById("itemName").value.trim();
-      const model = document.getElementById("itemModel").value.trim();  // 👈 NEW
+      const model = document.getElementById("itemModel").value.trim();
       const category = document.getElementById("itemCategory").value.trim();
       const warranty = document.getElementById("itemWarranty").value.trim();
       const units = document.getElementById("itemUnits").value.trim();
@@ -114,49 +114,37 @@
       const imageFile = document.getElementById("itemImage").files[0];
 
       const token = localStorage.getItem("token");
-
       const formData = new FormData();
       formData.append("name", name);
-      formData.append("model", model);  
+      formData.append("model", model);
       formData.append("category", category);
       formData.append("warranty", warranty);
       formData.append("units", units);
       formData.append("price", price);
       formData.append("description", description);
-
       if (imageFile) formData.append("image", imageFile);
 
+      let url = "http://localhost:5000/api/products";
+      let method = "POST";
       if (id) {
-        const response = await fetch(`http://localhost:5000/api/products/${id}`, {
-          method: "PUT",
-          headers: { "Authorization": "Bearer " + token },
-          body: formData
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-          alert("Product updated successfully!");
-          resetForm();
-          loadProducts();
-        } else alert(data.message || "Update failed");
-        return;
+        url += `/${id}`;
+        method = "PUT";
       }
 
-      if (!imageFile) return alert("Please upload an image!");
-
-      const response = await fetch("http://localhost:5000/api/products", {
-        method: "POST",
+      const response = await fetch(url, {
+        method,
         headers: { "Authorization": "Bearer " + token },
         body: formData
       });
 
       const data = await response.json();
-
       if (response.ok) {
-        alert("Product added successfully!");
+        alert(id ? "Product updated successfully!" : "Product added successfully!");
         resetForm();
         loadProducts();
-      } else alert(data.message || "Add failed");
+      } else {
+        alert(data.message || (id ? "Update failed" : "Add failed"));
+      }
     });
 
     async function loadProducts() {
@@ -164,10 +152,8 @@
       const res = await fetch("http://localhost:5000/api/products", {
         headers: token ? { "Authorization": "Bearer " + token } : {}
       });
-
       const data = await res.json();
       const products = Array.isArray(data) ? data : data.products || [];
-
       displayProducts(products);
     }
 
@@ -179,9 +165,9 @@
 
       productListContainer.innerHTML = products.map(p => `
         <div class="product-card" data-id="${p._id}">
-          <img src="http://localhost:5000/${p.image}" alt="${p.name}" />
+          <img src="${p.image}" alt="${p.name}" crossOrigin="anonymous" />
           <h3>${p.name}</h3>
-          <p><strong>Model:</strong> ${p.model}</p>  
+          <p><strong>Model:</strong> ${p.model}</p>
           <p><strong>Category:</strong> ${p.category}</p>
           <p><strong>Price:</strong> PKR ${p.price}</p>
           <p><strong>Units:</strong> ${p.units}</p>
@@ -193,68 +179,50 @@
       `).join("");
 
       document.querySelectorAll(".edit-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          const id = e.target.closest(".product-card").dataset.id;
-          editProduct(id);
-        });
+        btn.addEventListener("click", e => editProduct(e.target.closest(".product-card").dataset.id));
       });
 
       document.querySelectorAll(".delete-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          const id = e.target.closest(".product-card").dataset.id;
-          deleteProduct(id);
-        });
+        btn.addEventListener("click", e => deleteProduct(e.target.closest(".product-card").dataset.id));
       });
     }
 
-   
-async function editProduct(id) {
-  const token = localStorage.getItem("token");
+    async function editProduct(id) {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+        headers: { "Authorization": "Bearer " + token }
+      });
+      const p = await res.json();
 
-  const res = await fetch(`http://localhost:5000/api/products/${id}`, {
-    headers: { "Authorization": "Bearer " + token }
-  });
+      document.getElementById("itemName").value = p.name;
+      document.getElementById("itemModel").value = p.model;
+      document.getElementById("itemCategory").value = p.category;
+      document.getElementById("itemWarranty").value = p.warranty;
+      document.getElementById("itemUnits").value = p.units;
+      document.getElementById("itemPrice").value = p.price;
+      document.getElementById("itemDescription").value = p.description;
+      document.getElementById("editProductId").value = p._id;
 
-  const p = await res.json();
+      if (p.image) {
+        document.getElementById("currentImageContainer").style.display = "block";
+        document.getElementById("currentImage").src = p.image;
+      } else {
+        document.getElementById("currentImageContainer").style.display = "none";
+      }
 
-  document.getElementById("itemName").value = p.name;
-  document.getElementById("itemModel").value = p.model;
-  document.getElementById("itemCategory").value = p.category;
-  document.getElementById("itemWarranty").value = p.warranty;
-  document.getElementById("itemUnits").value = p.units;
-  document.getElementById("itemPrice").value = p.price;
-  document.getElementById("itemDescription").value = p.description;
-
-  document.getElementById("editProductId").value = p._id;
-
-  // Show current image
-  if (p.image) {
-    document.getElementById("currentImageContainer").style.display = "block";
-    document.getElementById("currentImage").src = `http://localhost:5000/${p.image}`;
-  } else {
-    document.getElementById("currentImageContainer").style.display = "none";
-  }
-
-  document.getElementById("itemImage").required = false;
-  document.getElementById("formBtn").textContent = "Update Item";
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
+      document.getElementById("itemImage").required = false;
+      document.getElementById("formBtn").textContent = "Update Item";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
 
     async function deleteProduct(id) {
       if (!confirm("Delete this product?")) return;
-
       const token = localStorage.getItem("token");
-
       const res = await fetch(`http://localhost:5000/api/products/${id}`, {
-  method: "DELETE",
-  headers: { "Authorization": "Bearer " + token }
-});
-
-
+        method: "DELETE",
+        headers: { "Authorization": "Bearer " + token }
+      });
       const data = await res.json();
-
       if (res.ok) {
         alert("Product deleted");
         loadProducts();
@@ -266,7 +234,7 @@ async function editProduct(id) {
       document.getElementById("editProductId").value = "";
       document.getElementById("formBtn").textContent = "Add Item";
       document.getElementById("itemImage").required = true;
-      document.getElementById("itemModel").required = true; 
+      document.getElementById("itemModel").required = true;
       document.getElementById("currentImageContainer").style.display = "none";
     }
   </script>
