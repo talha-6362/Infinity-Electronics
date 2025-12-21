@@ -1,6 +1,6 @@
 import "../../js/sessionCheck.js"; 
 import { BASE_URL } from "../../js/api.js"; 
-
+import "../../js/sessionCheck.js";
 function toggleMenu() {
   const navLinks = document.getElementById("navLinks");
   navLinks.classList.toggle("show");
@@ -9,13 +9,17 @@ function toggleMenu() {
 async function fetchProducts() {
   try {
     const res = await fetch(`${BASE_URL}/products`);
-    if (!res.ok) throw new Error("Failed to fetch products");
-    return await res.json();
+    const data = await res.json();
+
+    
+
+    return data.products || data; 
   } catch (err) {
     console.error("Fetch Products Error:", err);
     return [];
   }
 }
+
 
 function groupByCategory(products) {
   const grouped = {

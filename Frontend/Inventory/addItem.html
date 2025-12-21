@@ -10,7 +10,7 @@
 <body>
 <nav class="navbar">
   <div class="brand">Infinity Electronics</div>
-  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+  <button class="menu-toggle">☰</button>
   <div class="nav-actions" id="navLinks">
     <a href="AddItem.html" class="active">Add Item</a>
     <a href="viewInventory.html">View Inventory</a>
@@ -74,45 +74,79 @@
   </form>
 </div>
 
-<script>
-document.getElementById("addItemForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+<script type="module">
+  import "../js/sessionCheck.js";
 
-  const name = document.getElementById("itemName").value.trim();
-  const model = document.getElementById("itemModel").value.trim();
-  const category = document.getElementById("itemCategory").value.trim();
-  const warranty = document.getElementById("itemWarranty").value.trim();
-  const units = document.getElementById("itemUnits").value.trim();
-  const price = document.getElementById("itemPrice").value.trim();
-  const description = document.getElementById("itemDescription").value.trim();
-  const imageFile = document.getElementById("itemImage").files[0];
-
-  if (!imageFile) return alert("Please upload an image!");
-
-  const formData = new FormData();
-  formData.append("name", name);
-  formData.append("model", model);
-  formData.append("category", category);
-  formData.append("warranty", warranty);
-  formData.append("units", units);
-  formData.append("price", price);
-  formData.append("description", description);
-  formData.append("image", imageFile);
-
-  const token = localStorage.getItem("token");
-
-  const res = await fetch("http://localhost:5000/api/products", {
-    method: "POST",
-    headers: { "Authorization": "Bearer " + token },
-    body: formData
+  document.querySelector(".menu-toggle").addEventListener("click", () => {
+    const nav = document.getElementById("navLinks");
+    if (nav) nav.classList.toggle("show");
   });
 
+  document.getElementById("addItemForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("itemName").value.trim();
+    const model = document.getElementById("itemModel").value.trim();
+    const category = document.getElementById("itemCategory").value.trim();
+    const warranty = document.getElementById("itemWarranty").value.trim();
+    const units = document.getElementById("itemUnits").value.trim();
+    const price = document.getElementById("itemPrice").value.trim();
+    const description = document.getElementById("itemDescription").value.trim();
+    const imageFile = document.getElementById("itemImage").files[0];
+
+    if (!imageFile) return alert("Please upload an image!");
+
+if (!imageFile) return alert("Please upload an image!");
+if (imageFile.size > 8 * 1024 * 1024) return alert("Image too large! Maximum 8MB allowed.");
+
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("model", model);
+    formData.append("category", category);
+    formData.append("warranty", warranty);
+    formData.append("units", units);
+    formData.append("price", price);
+    formData.append("description", description);
+    formData.append("image", imageFile);
+
+    const token = localStorage.getItem("token");
+
+    try {
+  const res = await fetch("http://localhost:5000/api/products", {
+    method: "POST",
+    headers: { 
+      "Authorization": "Bearer " + token,
+      // "Content-Type" FormData ke saath automatic set hota hai
+    },
+    body: formData,
+    credentials: "include"  // ✅ Important: Cookies allow karega
+  });
+
+  // Response handle karein
+  if (!res.ok) {
+    const errorText = await res.text();
+    console.error("Server Error Response:", errorText);
+    throw new Error(`Server error: ${res.status}`);
+  }
+
   const data = await res.json();
-  if (res.ok) {
+  
+  if (data.success) {
     alert("Product added successfully!");
     document.getElementById("addItemForm").reset();
-  } else alert(data.message || "Add failed");
-});
+  } else {
+    alert(data.message || "Add failed");
+  }
+  
+} catch (err) {
+  console.error("Fetch Error:", err);
+  alert("Network error: " + err.message);
+}
+
+  });
 </script>
+
+
 </body>
 </html>

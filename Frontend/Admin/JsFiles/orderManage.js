@@ -1,9 +1,11 @@
 import { BASE_URL, apiPut } from "../../js/api.js";
-
+import "../../js/sessionCheck.js";
 const token = localStorage.getItem("token");
-if (!token) {
-  alert("You must login!");
-  window.location.href = "../login.html";
+const role = localStorage.getItem("role");
+
+if (!token || role !== "admin") {
+  alert("Unauthorized access!");
+  window.location.href = "../../login.html";
 }
 
 const orderTableBody = document.getElementById("orderTableBody");

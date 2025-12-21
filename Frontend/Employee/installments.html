@@ -54,7 +54,17 @@
         </form>
       </div>
     </section>
+<div id="witnessModal" class="modal">
+  <div class="modal-content">
+    <span id="closeModal">&times;</span>
+    <h3>Witness Details</h3>
 
+    <p><b>Name:</b> <span id="wName"></span></p>
+    <p><b>Phone:</b> <span id="wPhone"></span></p>
+    <p><b>CNIC:</b> <span id="wCNIC"></span></p>
+    <p><b>Address:</b> <span id="wAddress"></span></p>
+  </div>
+</div>
     <aside class="right-panel">
       <div class="card">
         <h2>Customer List</h2>
@@ -68,10 +78,11 @@
           <table id="customerTable">
             <thead>
               <tr>
-                <th>Account #</th>
-                <th>Name</th>
-                <th>Remaining (PKR)</th>
-                <th>Minimum Installment (PKR)</th>
+               <th>Account #</th>
+<th>Name</th>
+<th>Remaining</th>
+<th>Min Installment</th>
+<th>Witness</th>
 
               </tr>
             </thead>

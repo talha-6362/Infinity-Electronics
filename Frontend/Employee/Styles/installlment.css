@@ -5,6 +5,9 @@ body {
   padding: 0;
 }
 
+/* =========================
+   MAIN LAYOUT
+========================= */
 .main-container {
   display: flex;
   gap: 20px;
@@ -13,7 +16,71 @@ body {
   box-sizing: border-box;
 }
 
-.left-panel, .right-panel {
+/* =========================
+   MODAL BACKDROP
+========================= */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* =========================
+   MODAL CONTENT (UPDATED)
+========================= */
+.modal-content {
+  background: #ffffff;
+  padding: 25px 30px;
+  width: 90%;
+  max-width: 600px;       /* 👈 LARGE MODAL */
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+  position: relative;
+  animation: modalPop 0.25s ease;
+}
+
+/* =========================
+   MODAL ANIMATION
+========================= */
+@keyframes modalPop {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   MODAL CLOSE BUTTON
+========================= */
+#closeModal {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-size: 26px;
+  font-weight: bold;
+  cursor: pointer;       /* 👈 POINTER */
+  color: #333;
+  user-select: none;
+}
+
+#closeModal:hover {
+  color: red;
+  transform: scale(1.15);
+}
+
+/* =========================
+   PANELS
+========================= */
+.left-panel,
+.right-panel {
   flex: 1;
   min-width: 300px;
   display: flex;
@@ -36,6 +103,9 @@ body {
   font-size: 20px;
 }
 
+/* =========================
+   FORM
+========================= */
 .form-group {
   margin-bottom: 14px;
 }
@@ -75,6 +145,15 @@ body {
   display: block;
 }
 
+.success {
+  margin-top: 10px;
+  color: #0f7a1a;
+  font-weight: 600;
+}
+
+/* =========================
+   BUTTONS
+========================= */
 .btn-save {
   background: #004d99;
   color: #fff;
@@ -91,12 +170,23 @@ body {
   background: #0066cc;
 }
 
-.success {
-  margin-top: 10px;
-  color: #0f7a1a;
-  font-weight: 600;
+.btn-witness {
+  background: #004d99;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
 }
 
+.btn-witness:hover {
+  background: #0066cc;
+}
+
+/* =========================
+   SEARCH
+========================= */
 .search-row {
   display: flex;
   gap: 8px;
@@ -118,6 +208,9 @@ body {
   cursor: pointer;
 }
 
+/* =========================
+   TABLE
+========================= */
 .table-wrap {
   max-height: calc(100% - 80px);
   overflow-y: auto;
@@ -155,6 +248,9 @@ tbody tr:hover {
   text-align: center;
 }
 
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 900px) {
   .main-container {
     flex-direction: column;

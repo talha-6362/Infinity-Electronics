@@ -26,8 +26,13 @@
     <h2>Search & Update Customer Details</h2>
 
     <div class="search-section">
-      <label>Enter Account Number</label>
-      <input type="text" id="searchAccount" placeholder="Enter account number">
+      <label>Search By</label>
+      <select id="searchType">
+        <option value="account">Account Number</option>
+        <option value="cnic">CNIC</option>
+      </select>
+
+      <input type="text" id="searchAccount" placeholder="Enter value">
       <small class="error" id="searchError"></small>
       <button id="searchBtn">Search</button>
     </div>

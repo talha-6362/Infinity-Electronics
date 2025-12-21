@@ -1,7 +1,8 @@
-function toggleMenu() {
+import "../../js/sessionCheck.js";
+document.querySelector(".menu-toggle").addEventListener("click", () => {
   const nav = document.getElementById("navLinks");
   if (nav) nav.classList.toggle("show");
-}
+});
 
 let allProducts = [];
 
@@ -10,7 +11,7 @@ async function loadProducts() {
     const response = await fetch("http://localhost:5000/api/products");
     allProducts = await response.json();
 
-    console.log("Products loaded:", allProducts);
+    // console.log("Products loaded:", allProducts);
 
     displayProducts(allProducts); 
   } catch (error) {

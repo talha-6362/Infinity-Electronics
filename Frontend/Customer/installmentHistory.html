@@ -6,6 +6,32 @@
   <title>View Requests | Infinity Electronics</title>
   <link rel="stylesheet" href="Styles/installmentHistory.css">
   <link rel="stylesheet" href="Styles/navbar.css">
+  <style>
+    .payment-card {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .inner-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    .inner-table th,
+    .inner-table td {
+      border: 1px solid #ddd;
+      padding: 6px;
+      font-size: 14px;
+    }
+
+    .inner-table th {
+      background: #f3f3f3;
+    }
+  </style>
 </head>
 <body>
   
@@ -39,9 +65,7 @@
             <th>Request ID</th>
             <th>Product</th>
             <th>Account No</th>
-            <th>  Name</th>
-            
-            
+            <th>Name</th>
             <th>Model</th>
             <th>Price</th>
             <th>Status</th>
@@ -50,6 +74,12 @@
         <tbody></tbody>
       </table>
     </div>
+
+    <div class="table-container" id="paymentContainer" style="display:none;">
+      <h3>Payment Details</h3>
+      <div id="paymentDetails"></div>
+    </div>
+
   </div>
 
   <footer>

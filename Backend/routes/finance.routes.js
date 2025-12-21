@@ -1,4 +1,3 @@
-// routes/finance.routes.js
 import express from "express";
 import {
   getWeeklyReport,

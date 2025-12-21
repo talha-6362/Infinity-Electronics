@@ -1,13 +1,44 @@
 import Product from "../models/Product.js";
 import cloudinary from "../utils/cloudinary.js";
 import fs from "fs";
+// export const createProduct = async (req, res) => {
+//   try {
+   
 
-// Create Product
+//     const { name, model, category, warranty, units, price, description } = req.body;
+
+//     let imageUrl = null;
+//     if (req.file) {
+//       const result = await cloudinary.uploader.upload(req.file.path, {
+//         folder: "my_app_uploads",
+//         resource_type: "auto"
+//       });
+//       imageUrl = result.secure_url;
+
+//       fs.unlink(req.file.path, (err) => {
+//         if (err) console.log("Failed to delete local file:", err);
+//       });
+//     }
+
+//     const product = await Product.create({
+//       name,
+//       model,
+//       category,
+//       warranty,
+//       units,
+//       price,
+//       description,
+//       image: imageUrl
+//     });
+
+//     res.status(201).json({ message: "Product created", product });
+//   } catch (error) {
+//     console.log("Create Product Error:", error);
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 export const createProduct = async (req, res) => {
   try {
-    console.log("Request body:", req.body);
-    console.log("Uploaded file:", req.file);
-
     const { name, model, category, warranty, units, price, description } = req.body;
 
     let imageUrl = null;
@@ -16,34 +47,29 @@ export const createProduct = async (req, res) => {
         folder: "my_app_uploads",
         resource_type: "auto"
       });
-      console.log("Cloudinary result:", result);
       imageUrl = result.secure_url;
 
-      // Optional: remove local file after upload
       fs.unlink(req.file.path, (err) => {
         if (err) console.log("Failed to delete local file:", err);
       });
     }
 
     const product = await Product.create({
-      name,
-      model,
-      category,
-      warranty,
-      units,
-      price,
-      description,
-      image: imageUrl
+      name, model, category, warranty, units, price, description, image: imageUrl
     });
 
     res.status(201).json({ message: "Product created", product });
   } catch (error) {
     console.log("Create Product Error:", error);
-    res.status(500).json({ message: error.message });
+
+    if (error.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({ message: "File too large. Maximum 8MB allowed." });
+    }
+
+    res.status(500).json({ message: error.message || "Server error" });
   }
 };
 
-// Get all products
 export const getProducts = async (req, res) => {
   try {
     const products = await Product.find();
@@ -54,19 +80,20 @@ export const getProducts = async (req, res) => {
   }
 };
 
-// Get product by ID
 export const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ message: "Product not found" });
-    res.json(product);
+    if (!product) 
+      return res.status(404).json({ success: false, message: "Product not found" });
+
+    res.json({ success: true, data: product });
   } catch (error) {
     console.log("Get ProductById Error:", error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// Update product
+
 export const updateProduct = async (req, res) => {
   try {
     const existingProduct = await Product.findById(req.params.id);
@@ -90,7 +117,6 @@ export const updateProduct = async (req, res) => {
       });
       updateData.image = result.secure_url;
 
-      // Optional: remove local file after upload
       fs.unlink(req.file.path, (err) => {
         if (err) console.log("Failed to delete local file:", err);
       });
@@ -104,13 +130,11 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// Delete product
 export const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ message: "Product not found" });
 
-    // Delete image from Cloudinary
     if (product.image) {
       try {
         const parts = product.image.split("/");

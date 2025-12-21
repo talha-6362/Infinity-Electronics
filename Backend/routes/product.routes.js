@@ -7,7 +7,7 @@ import {
   getProductById
 } from "../controllers/product.controller.js";
 
-import { allowCreateRole, adminOnly } from "../middleware/adminAuth.js";
+import { authorizeRoles } from "../middleware/adminAuth.js"; 
 import { upload } from "../middleware/multer.js";
 
 const router = express.Router();
@@ -16,10 +16,10 @@ router.get("/", getProducts);
 
 router.get("/:id", getProductById);
 
-router.post("/", allowCreateRole, upload.single("image"), createProduct);
+router.post("/", authorizeRoles("admin", "inventory"), upload.single("image"), createProduct);
 
-router.put("/:id", adminOnly, upload.single("image"), updateProduct);
+router.put("/:id", authorizeRoles("admin"), upload.single("image"), updateProduct);
 
-router.delete("/:id", adminOnly, deleteProduct);
+router.delete("/:id", authorizeRoles("admin"), deleteProduct);
 
 export default router;

@@ -12,12 +12,11 @@
 <body>
   <nav class="navbar">
     <div class="brand">Infinity Electronics</div>
-    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <button class="menu-toggle">☰</button>
 
     <div class="nav-actions" id="navLinks">
       <a href="financeInstallments.html" class="active">Summary</a>
       <a href="financeReports.html">Reports</a>
-      
       <a href="../login.html" class="logout">Logout</a>
     </div>
   </nav>
@@ -27,8 +26,7 @@
 
     <div class="month-filter">
       <label for="monthSelect">Select Month:</label>
-      <select id="monthSelect" onchange="filterByMonth()">
-      </select>
+      <select id="monthSelect" onchange="filterByMonth()"></select>
     </div>
 
     <div class="summary-cards">
@@ -54,12 +52,11 @@
     </div>
 
     <div class="two-column">
-      
       <div class="column">
         <h3>Installment Amounts</h3>
         <canvas id="amountChart"></canvas>
 
-        <table id="paidTable">
+        <table class="payment-table" id="paidTable">
           <thead>
             <tr>
               <th>Customer</th>
@@ -76,7 +73,7 @@
         <h3>Installment Counts</h3>
         <canvas id="countChart"></canvas>
 
-        <table id="unpaidTable">
+        <table class="payment-table" id="unpaidTable">
           <thead>
             <tr>
               <th>Customer</th>
@@ -88,10 +85,9 @@
           <tbody></tbody>
         </table>
       </div>
-
     </div>
   </div>
 
-  <script defer src="JsFiles/financeInstallment.js"></script>
+  <script type="module" src="JsFiles/financeInstallment.js"></script>
 </body>
 </html>

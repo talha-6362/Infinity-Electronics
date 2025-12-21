@@ -7,12 +7,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-// MongoDB connection (v7+)
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.error("MongoDB connection error:", err));
 
-// Absolute path to uploads folder (Backend/uploads)
 const uploadFolder = path.join(process.cwd(), "uploads");
 
 const uploadImagesAndUpdateDB = async () => {
@@ -31,7 +29,6 @@ const uploadImagesAndUpdateDB = async () => {
     for (const file of files) {
       const filePath = path.join(uploadFolder, file);
 
-      // Upload to Cloudinary
       const result = await cloudinary.uploader.upload(filePath, {
         folder: "my_app_uploads",
         resource_type: "auto",
@@ -39,7 +36,6 @@ const uploadImagesAndUpdateDB = async () => {
 
       console.log(`Uploaded: ${file} → ${result.secure_url}`);
 
-      // Update DB: find product by matching filename
       const product = await Product.findOne({ image: { $regex: file, $options: "i" } });
       if (product) {
         product.image = result.secure_url;
@@ -49,7 +45,6 @@ const uploadImagesAndUpdateDB = async () => {
         console.log(`No product found in DB for file: ${file}`);
       }
 
-      // Optional: delete local file after upload
      fs.unlinkSync(filePath);
     }
 

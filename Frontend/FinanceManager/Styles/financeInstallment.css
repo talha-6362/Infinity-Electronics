@@ -88,13 +88,14 @@ table {
   margin-top: 10px;
 }
 
-th, td {
+.payment-table th,
+.payment-table td {
   border: 1px solid #ccc;
   padding: 10px;
   text-align: center;
 }
 
-th {
+.payment-table th {
   background: #004d99;
   color: white;
 }

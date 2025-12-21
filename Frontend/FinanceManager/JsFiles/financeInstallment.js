@@ -1,3 +1,4 @@
+import "../../js/sessionCheck.js";
 let API_DATA = {};
 let amountChart, countChart;
 
@@ -28,15 +29,15 @@ function groupByMonth(data) {
     result[month].paid.push({
       name: c.name,
       product: c.product,
-      amount: c.paid,
-      date: new Date(c.createdAt).toDateString()
+      amount: Number(c.paid) || 0,
+      date: new Date(c.createdAt).toLocaleDateString()
     });
 
-    if (c.remaining > 0) {
+    if ((c.remaining || 0) > 0) {
       result[month].unpaid.push({
         name: c.name,
         product: c.product,
-        amount: c.remaining,
+        amount: Number(c.remaining) || 0,
         phone: c.phone
       });
     }
@@ -69,7 +70,7 @@ function renderTables(paid, unpaid) {
       <tr>
         <td>${i.name}</td>
         <td>${i.product}</td>
-        <td>${i.amount} PKR</td>
+        <td>${i.amount.toLocaleString()} PKR</td>
         <td>${i.date}</td>
       </tr>
     `).join("");
@@ -79,7 +80,7 @@ function renderTables(paid, unpaid) {
       <tr>
         <td>${i.name}</td>
         <td>${i.product}</td>
-        <td>${i.amount} PKR</td>
+        <td>${i.amount.toLocaleString()} PKR</td>
         <td>${i.phone}</td>
       </tr>
     `).join("");
@@ -89,8 +90,8 @@ function showSummary(paid, unpaid) {
   const totalPaid = paid.reduce((a, b) => a + b.amount, 0);
   const totalUnpaid = unpaid.reduce((a, b) => a + b.amount, 0);
 
-  document.getElementById("totalPaid").textContent = `${totalPaid} PKR`;
-  document.getElementById("totalUnpaid").textContent = `${totalUnpaid} PKR`;
+  document.getElementById("totalPaid").textContent = `${totalPaid.toLocaleString()} PKR`;
+  document.getElementById("totalUnpaid").textContent = `${totalUnpaid.toLocaleString()} PKR`;
   document.getElementById("countPaid").textContent = paid.length;
   document.getElementById("countUnpaid").textContent = unpaid.length;
 }
@@ -130,9 +131,10 @@ function renderCharts(paid, unpaid) {
   });
 }
 
-function toggleMenu() {
+document.querySelector(".menu-toggle").addEventListener("click", () => {
   const nav = document.getElementById("navLinks");
-  nav.classList.toggle("show");
-}
+  if (nav) nav.classList.toggle("show");
+});
+
 
 init();

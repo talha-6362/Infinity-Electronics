@@ -1,9 +1,11 @@
 import { BASE_URL, apiPost, apiPut } from "../../js/api.js";
-
+import "../../js/sessionCheck.js";
 const token = localStorage.getItem("token");
-if (!token) {
-  alert("You must login as admin!");
-  window.location.href = "../login.html";
+const role = localStorage.getItem("role");
+
+if (!token || role !== "admin") {
+  alert("Unauthorized access!");
+  window.location.href = "../../login.html";
 }
 
 const addUserForm = document.getElementById("addUserForm");

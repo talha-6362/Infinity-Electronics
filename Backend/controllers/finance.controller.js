@@ -15,13 +15,7 @@ export const getWeeklyReport = async (req, res) => {
           as: "productInfo"
         }
       },
-      {
-        $unwind: { 
-          path: "$productInfo", 
-          preserveNullAndEmptyArrays: true 
-        }
-      },
-
+      { $unwind: { path: "$productInfo", preserveNullAndEmptyArrays: true } },
       {
         $group: {
           _id: "$productId",
@@ -36,12 +30,12 @@ export const getWeeklyReport = async (req, res) => {
             }
           },
           units: { $sum: 1 },
-          total: { $sum: "$productPrice" }
+          total: { $sum: { $ifNull: ["$productPrice", 0] } }
         }
       }
     ]);
 
-    const totalWeekly = data.reduce((s, v) => s + v.total, 0);
+    const totalWeekly = data.reduce((sum, v) => sum + (v.total || 0), 0);
 
     res.json({
       success: true,
@@ -51,10 +45,9 @@ export const getWeeklyReport = async (req, res) => {
         topItem: data.length > 0 ? data[0] : null
       }
     });
-
-  } catch (e) {
-    console.error("Weekly Error:", e);
-    res.json({ success: false, message: e.message });
+  } catch (err) {
+    console.error("Weekly Error:", err);
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -68,16 +61,10 @@ export const getAvailableMonths = async (req, res) => {
         }
       },
       {
-        $group: {
-          _id: { year: "$year", month: "$month" }
-        }
+        $group: { _id: { year: "$year", month: "$month" } }
       },
       {
-        $project: {
-          year: "$_id.year",
-          month: "$_id.month",
-          _id: 0
-        }
+        $project: { year: "$_id.year", month: "$_id.month", _id: 0 }
       },
       { $sort: { year: -1, month: -1 } }
     ];
@@ -86,15 +73,10 @@ export const getAvailableMonths = async (req, res) => {
 
     const result = months.map(m => {
       const d = new Date(m.year, m.month - 1, 1);
-      return {
-        label: formatMonthYear(d),
-        month: m.month,
-        year: m.year
-      };
+      return { label: formatMonthYear(d), month: m.month, year: m.year };
     });
 
     res.json({ success: true, data: result });
-
   } catch (err) {
     console.error("Month Error:", err);
     res.status(500).json({ success: false, message: err.message });
@@ -106,16 +88,15 @@ export const getMonthlyReport = async (req, res) => {
     const month = parseInt(req.params.month);
     const year = parseInt(req.query.year);
 
+    if (isNaN(month) || isNaN(year)) {
+      return res.status(400).json({ success: false, message: "Invalid month or year" });
+    }
+
     const start = new Date(year, month - 1, 1);
     const end = new Date(year, month, 1);
 
     const data = await Customer.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: start, $lt: end }
-        }
-      },
-
+      { $match: { createdAt: { $gte: start, $lt: end } } },
       {
         $lookup: {
           from: "products",
@@ -124,13 +105,7 @@ export const getMonthlyReport = async (req, res) => {
           as: "productInfo"
         }
       },
-      {
-        $unwind: { 
-          path: "$productInfo", 
-          preserveNullAndEmptyArrays: true 
-        }
-      },
-
+      { $unwind: { path: "$productInfo", preserveNullAndEmptyArrays: true } },
       {
         $group: {
           _id: "$productId",
@@ -145,12 +120,12 @@ export const getMonthlyReport = async (req, res) => {
             }
           },
           units: { $sum: 1 },
-          total: { $sum: "$productPrice" }
+          total: { $sum: { $ifNull: ["$productPrice", 0] } }
         }
       }
     ]);
 
-    const totalMonthly = data.reduce((s, v) => s + v.total, 0);
+    const totalMonthly = data.reduce((sum, v) => sum + (v.total || 0), 0);
 
     res.json({
       success: true,
@@ -160,9 +135,8 @@ export const getMonthlyReport = async (req, res) => {
         topItem: data.length > 0 ? data[0] : null
       }
     });
-
-  } catch (e) {
-    console.error("Monthly Error:", e);
-    res.json({ success: false, message: e.message });
+  } catch (err) {
+    console.error("Monthly Error:", err);
+    res.status(500).json({ success: false, message: err.message });
   }
 };

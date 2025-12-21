@@ -1,5 +1,5 @@
 import { apiGet, apiPost } from "../../js/api.js";
-
+import "../../js/sessionCheck.js";
 function toggleMenu() {
   const nav = document.getElementById("navLinks");
   nav.classList.toggle("show");
@@ -14,6 +14,9 @@ const searchInput = document.getElementById("searchCustomer");
 const searchError = document.getElementById("searchError");
 const dropdown = document.getElementById("productName");
 
+function generateAccountNo() {
+  return Math.floor(1000 + Math.random() * 9000).toString();
+}
 
 searchInput.addEventListener("change", async () => {
   const value = searchInput.value.trim();
@@ -21,42 +24,43 @@ searchInput.addEventListener("change", async () => {
 
   try {
     const res = await apiGet(`/requests/customer/${value}`);
-console.log("Customer API Response: ", res);
+    if (!res?.success || !res?.data) {
+      searchError.textContent = "Customer not found!";
+      return;
+    }
 
-if (!res?.success || !res?.data) {
-  searchError.textContent = "Customer not found!";
-  return;
-}
+    const customer = res.data;
 
-const customer = res.data;
+    let newAccountNo;
+    if (customer.lastAccountNo) {
+      newAccountNo = Number(customer.lastAccountNo) + 1000;
+    } else {
+      newAccountNo = generateAccountNo();
+    }
 
-searchError.textContent = "";
+    document.getElementById("accountNo").value = newAccountNo;
 
-document.getElementById("accountNo").value = customer.accountNo || "";
-document.getElementById("custName").value = customer.custName || "";
+    document.getElementById("custName").value = customer.custName || "";
 document.getElementById("custPhone").value = customer.phone || "";
 document.getElementById("custCNIC").value = customer.cnic || "";
 document.getElementById("custAddress").value = customer.address || "";
-
-dropdown.innerHTML = `<option value="">Select a Product</option>`;
-if (customer.products?.length > 0) {
-  customer.products.forEach((p) => {
-    const option = document.createElement("option");
-    option.value = p._id;
-    option.textContent = `${p.productName} (${p.productModel})`;
-    dropdown.appendChild(option);
-  });
-}
- else {
-      console.warn("No products assigned to customer.");
+    dropdown.innerHTML = `<option value="">Select a Product</option>`;
+    if (customer.products?.length > 0) {
+      customer.products.forEach(p => {
+        const option = document.createElement("option");
+        option.value = p._id;
+        option.textContent = `${p.productName} (${p.productModel})`;
+        dropdown.appendChild(option);
+      });
     }
 
     document.getElementById("productPrice").value = "";
     document.getElementById("advancePayment").value = "";
     document.getElementById("monthlyInstallment").value = "";
+    searchError.textContent = "";
 
   } catch (err) {
-    console.error("Error fetching customer:", err);
+    console.error(err);
     searchError.textContent = "Error fetching customer.";
   }
 });
@@ -74,20 +78,12 @@ dropdown.addEventListener("change", async function () {
 
   try {
     const res = await apiGet(`/products/${productId}`);
-    console.log("Product API raw response:", res);
+console.log("Fetched product:", res.data);
+const product = res.data;
+priceInput.value = product.price;
+document.getElementById("advancePayment").value = Math.round(product.price * 0.05);
+calculateMonthlyInstallment();
 
-    
-    const product = res.data || res;
-
-    if (!product) {
-      console.error("Product not found");
-      priceInput.value = "";
-      return;
-    }
-
-    priceInput.value = product.price;
-    document.getElementById("advancePayment").value = Math.round(product.price * 0.05);
-    calculateMonthlyInstallment();
 
   } catch (err) {
     console.error("Error loading product:", err);
@@ -113,7 +109,6 @@ function calculateMonthlyInstallment() {
 }
 
 document.getElementById("advancePayment").addEventListener("input", calculateMonthlyInstallment);
-
 
 document.getElementById("saleForm").addEventListener("submit", async function (e) {
   e.preventDefault();
@@ -159,27 +154,27 @@ document.getElementById("saleForm").addEventListener("submit", async function (e
 
   const payload = {
     accountNo: document.getElementById("accountNo").value,
-    custName: custName.value,
-    custPhone: custPhone.value,
-    custCNIC: custCNIC.value,
-    custAddress: custAddress.value,
+    custName: document.getElementById("custName").value,
+    custPhone: document.getElementById("custPhone").value,
+    custCNIC: document.getElementById("custCNIC").value,
+    custAddress: document.getElementById("custAddress").value,
     productId: dropdown.value,
-    productPrice: Number(productPrice.value),
-    advancePayment: Number(advancePayment.value),
-    monthlyInstallment: Number(monthlyInstallment.value),
-    witnessName: witnessName.value,
-    witnessPhone: witnessPhone.value,
-    witnessCNIC: witnessCNIC.value,
-    witnessAddress: witnessAddress.value
+    productPrice: Number(document.getElementById("productPrice").value),
+    advancePayment: Number(document.getElementById("advancePayment").value),
+    monthlyInstallment: Number(document.getElementById("monthlyInstallment").value),
+    witnessName: document.getElementById("witnessName").value,
+    witnessPhone: document.getElementById("witnessPhone").value,
+    witnessCNIC: document.getElementById("witnessCNIC").value,
+    witnessAddress: document.getElementById("witnessAddress").value
   };
 
   try {
     const res = await apiPost("/customers/add", payload);
 
     if (res.success) {
-      accountNo.value = res.data.accountNo;
+      document.getElementById("accountNo").value = res.data.accountNo;
       alert("Customer Added Successfully! Account No: " + res.data.accountNo);
-      saleForm.reset();
+      this.reset();
       dropdown.innerHTML = `<option value="">Select a Product</option>`;
     } else {
       alert("Error: " + res.message);

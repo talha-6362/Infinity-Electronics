@@ -1,17 +1,15 @@
 import Request from "../models/Request.js";
-
+import Product from "../models/Product.js";
 export const createRequest = async (req, res) => {
   try {
-    const lastRequest = await Request.findOne().sort({ createdAt: -1 });
+   const lastRequest = await Request.findOne().sort({ createdAt: -1 });
+let newAccountNo = "0001"; 
+if (lastRequest && lastRequest.accountNo) {
+  let lastNo = parseInt(lastRequest.accountNo, 10);
+  let nextNo = lastNo + 1;
+  newAccountNo = nextNo.toString().padStart(4, "0");
+}
 
-    let newAccountNo = "0001"; 
-
-    if (lastRequest && lastRequest.accountNo) {
-      let lastNo = parseInt(lastRequest.accountNo, 10);
-      let nextNo = lastNo + 1;
-
-      newAccountNo = nextNo.toString().padStart(4, "0");
-    }
 
     const newRequest = new Request({
       ...req.body,
@@ -54,14 +52,24 @@ export const updateRequestStatus = async (req, res) => {
     const { id } = req.params;
     const { status } = req.body; 
 
-    const updated = await Request.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
+    const request = await Request.findById(id);
+    if (!request) return res.status(404).json({ success: false, message: "Request not found" });
 
-    res.status(200).json({ success: true, data: updated });
+    request.status = status;
+    await request.save();
+
+    if (status === "approved") {
+      const product = await Product.findById(request.productId);
+      if (product && product.units > 0) {
+        product.units -= 1;
+        await product.save();
+      }
+    }
+
+    res.status(200).json({ success: true, data: request });
+
   } catch (err) {
+    console.error(err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
@@ -88,6 +96,7 @@ export const searchRequests = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
 export const getRequestsByPhoneOrCNIC = async (req, res) => {
   try {
     const { value } = req.params;
@@ -96,26 +105,25 @@ export const getRequestsByPhoneOrCNIC = async (req, res) => {
       $or: [{ cnic: value }, { phone: value }]
     }).populate("productId");
 
-    if (!requests || requests.length === 0) {
-      return res.status(404).json({ success: false, data: [] });
+    let customer;
+
+    if (requests.length > 0) {
+      customer = {
+        lastAccountNo: requests[requests.length - 1].accountNo,
+        custName: requests[0].custName,
+        phone: requests[0].phone,
+        cnic: requests[0].cnic,
+        address: requests[0].address,
+        products: requests.map(r => ({
+          _id: r.productId?._id,
+          productName: r.productName,
+          productModel: r.productModel,
+          productPrice: r.productPrice
+        }))
+      };
+    } else {
+      customer = null;
     }
-
-    // Single customer format
-    const customer = {
-      accountNo: requests[0].accountNo,
-      custName: requests[0].custName,
-      phone: requests[0].phone,
-      cnic: requests[0].cnic,
-      address: requests[0].address,
-
-      // Collect all products from all requests
-      products: requests.map(r => ({
-        _id: r.productId?._id,
-        productName: r.productName,
-        productModel: r.productModel,
-        productPrice: r.productPrice
-      }))
-    };
 
     res.status(200).json({
       success: true,

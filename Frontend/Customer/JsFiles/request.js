@@ -1,6 +1,6 @@
 import "../../js/sessionCheck.js";
 import { BASE_URL, apiPost } from "../../js/api.js"; 
-
+import "../../js/sessionCheck.js";
 function toggleMenu() {
   const nav = document.getElementById("navLinks");
   if (nav) nav.classList.toggle("show");
