@@ -8,7 +8,7 @@
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .brand {
@@ -29,6 +29,8 @@
   text-decoration: none;
   font-weight: 600;
   position: relative;
+  padding: 6px 12px;
+  border-radius: 6px;
   transition: 0.3s;
 }
 
@@ -46,6 +48,11 @@
 .nav-actions a:hover::after,
 .nav-actions a.active::after {
   width: 100%;
+}
+
+.nav-actions a.active,
+.nav-actions a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .logout {
@@ -87,24 +94,43 @@
   color: white;
   font-size: 26px;
   cursor: pointer;
+  z-index: 1001;
 }
 
+/* Mobile Styles */
 @media (max-width: 850px) {
+  .navbar {
+    padding: 12px 20px;
+  }
+  
   .nav-actions {
     display: none;
     flex-direction: column;
     position: absolute;
-    top: 60px;
-    right: 10px;
-    background: #004d99;
+    top: 100%;
+    right: 20px;
+    background: linear-gradient(90deg, #004d99, #0073e6);
     border-radius: 6px;
-    padding: 10px 0;
+    padding: 15px 20px;
     width: 180px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 1000;
   }
 
   .nav-actions.show {
     display: flex;
+    animation: slideDown 0.3s ease;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .search-container {

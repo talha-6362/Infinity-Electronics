@@ -4,7 +4,7 @@ export const checkSession = () => {
   if (!sessionExpiry) return; 
 
   const timeLeft = sessionExpiry - Date.now();
-  console.log(`Session time left: ${timeLeft} ms`);
+  // console.log(`Session time left: ${timeLeft} ms`);
 
   if (timeLeft <= 0) {
     alert("Session expired! Redirecting to login.");

@@ -14,47 +14,6 @@ button {
   outline: none;
 }
 
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #004d99;
-  color: white;
-  padding: 10px 20px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.navbar .brand {
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.navbar .nav-actions {
-  display: flex;
-  gap: 15px;
-}
-
-.navbar .nav-actions a {
-  padding: 6px 12px;
-  border-radius: 6px;
-  transition: background 0.3s;
-}
-
-.navbar .nav-actions a.active,
-.navbar .nav-actions a:hover {
-  background-color: #0073e6;
-}
-
-.menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 26px;
-  cursor: pointer;
-}
 
 .container {
   padding: 30px;

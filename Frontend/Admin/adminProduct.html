@@ -7,11 +7,12 @@
   <link rel="stylesheet" href="Styles/navbar.css" />
   <link rel="stylesheet" href="Styles/adminProduct.css" />
 </head>
-
 <body>
+
+  <!-- NAVBAR -->
   <nav class="navbar">
     <div class="brand">Infinity Electronics</div>
-    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <button class="menu-toggle" id="menuToggle">☰</button>
     <div class="nav-actions" id="navLinks">
       <a href="adminProduct.html" class="active">Products</a>
       <a href="orderManagement.html">Orders</a>
@@ -21,61 +22,63 @@
     </div>
   </nav>
 
+  <!-- MAIN CONTAINER -->
   <div class="container">
     <h2>Manage Product</h2>
 
-    <form id="addItemForm" class="form">
+    <!-- PRODUCT FORM -->
+    <form id="addItemForm" class="form" enctype="multipart/form-data">
       <input type="hidden" id="editProductId">
 
       <div class="form-group">
-        <label for="itemName">Product Name</label>
+        <label>Product Name</label>
         <input type="text" id="itemName" required>
       </div>
 
       <div class="form-group">
-        <label for="itemModel">Model</label>
+        <label>Model</label>
         <input type="text" id="itemModel" required>
       </div>
 
       <div class="form-group">
-        <label for="itemImage">Upload Product Image</label>
-        <input type="file" id="itemImage" accept="image/*">
-        <div id="currentImageContainer" style="margin-top: 10px; display:none;">
+        <label>Upload Product Image</label>
+        <input type="file" id="itemImage" accept="image/*" required>
+        <div id="currentImageContainer" style="display:none;margin-top:10px;">
           <label>Current Image:</label>
-          <img id="currentImage" src="" alt="Product Image" style="max-width: 150px; display:block; margin-top: 5px;" crossOrigin="anonymous">
+          <img id="currentImage" style="max-width:150px;display:block;margin-top:5px;">
         </div>
       </div>
 
       <div class="form-group">
-        <label for="itemCategory">Category</label>
+        <label>Category</label>
         <select id="itemCategory" required>
           <option value="">Select Category</option>
-          <option value="Fan">Fan</option>
-          <option value="Mobile">Mobile</option>
-          <option value="Refrigerator">Refrigerator</option>
-          <option value="Bike">Bike</option>
-          <option value="Washing Machine">Washing Machine</option>
-          <option value="Dryer">Dryer</option>
+          <option>Fan</option>
+          <option>Mobile</option>
+          <option>Refrigerator</option>
+          <option>Bike</option>
+          <option>Washing Machine</option>
+          <option>Dryer</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="itemWarranty">Warranty Period</label>
+        <label>Warranty</label>
         <input type="text" id="itemWarranty" required>
       </div>
 
       <div class="form-group">
-        <label for="itemUnits">Units</label>
-        <input type="number" id="itemUnits" required>
+        <label>Units</label>
+        <input type="number" id="itemUnits" min="0" required>
       </div>
 
       <div class="form-group">
-        <label for="itemPrice">Price (PKR)</label>
-        <input type="number" id="itemPrice" required>
+        <label>Price (PKR)</label>
+        <input type="number" id="itemPrice" min="0" required>
       </div>
 
       <div class="form-group">
-        <label for="itemDescription">Description</label>
+        <label>Description</label>
         <textarea id="itemDescription" rows="3" required></textarea>
       </div>
 
@@ -90,154 +93,157 @@
     <p>© 2025 Infinity Electronics</p>
   </footer>
 
+  <!-- SCRIPT -->
   <script type="module">
-import "../js/sessionCheck.js";
-    function toggleMenu() {
-      const nav = document.getElementById("navLinks");
-      if (nav) nav.classList.toggle("show");
-    }
+    import "../js/sessionCheck.js";
 
-    const productListContainer = document.getElementById("productList");
+    const API_URL = "http://localhost:5000/api/products";
+    const token = localStorage.getItem("token");
 
+    const form = document.getElementById("addItemForm");
+    const productList = document.getElementById("productList");
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    /* NAVBAR TOGGLE */
+    menuToggle.addEventListener("click", () => navLinks.classList.toggle("show"));
+
+    /* LOAD PRODUCTS ON PAGE LOAD */
     document.addEventListener("DOMContentLoaded", loadProducts);
 
-    document.getElementById("addItemForm").addEventListener("submit", async (e) => {
+    /* FORM SUBMIT */
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const id = document.getElementById("editProductId").value;
-      const name = document.getElementById("itemName").value.trim();
-      const model = document.getElementById("itemModel").value.trim();
-      const category = document.getElementById("itemCategory").value.trim();
-      const warranty = document.getElementById("itemWarranty").value.trim();
-      const units = document.getElementById("itemUnits").value.trim();
-      const price = document.getElementById("itemPrice").value.trim();
-      const description = document.getElementById("itemDescription").value.trim();
-      const imageFile = document.getElementById("itemImage").files[0];
 
-      const token = localStorage.getItem("token");
       const formData = new FormData();
-      formData.append("name", name);
-      formData.append("model", model);
-      formData.append("category", category);
-      formData.append("warranty", warranty);
-      formData.append("units", units);
-      formData.append("price", price);
-      formData.append("description", description);
-      if (imageFile) formData.append("image", imageFile);
+      formData.append("name", itemName.value.trim());
+      formData.append("model", itemModel.value.trim());
+      formData.append("category", itemCategory.value);
+      formData.append("warranty", itemWarranty.value.trim());
+      formData.append("units", Number(itemUnits.value));
+      formData.append("price", Number(itemPrice.value));
+      formData.append("description", itemDescription.value.trim());
 
-      let url = "http://localhost:5000/api/products";
-      let method = "POST";
-      if (id) {
-        url += `/${id}`;
-        method = "PUT";
-      }
+      if (itemImage.files[0]) formData.append("image", itemImage.files[0]);
 
-      const response = await fetch(url, {
-        method,
-        headers: { "Authorization": "Bearer " + token },
+      const res = await fetch(id ? `${API_URL}/${id}` : API_URL, {
+        method: id ? "PUT" : "POST",
+        headers: { Authorization: "Bearer " + token },
         body: formData
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        alert(id ? "Product updated successfully!" : "Product added successfully!");
-        resetForm();
-        loadProducts();
-      } else {
-        alert(data.message || (id ? "Update failed" : "Add failed"));
-      }
+      const data = await res.json();
+      if (!res.ok) { alert(data.message || "Operation failed"); return; }
+
+      alert(id ? "Product updated successfully" : "Product added successfully");
+      resetForm();
+      loadProducts();
     });
 
+    /* LOAD PRODUCTS */
     async function loadProducts() {
-      const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/products", {
-        headers: token ? { "Authorization": "Bearer " + token } : {}
-      });
+      const res = await fetch(API_URL, { headers: { Authorization: "Bearer " + token } });
       const data = await res.json();
       const products = Array.isArray(data) ? data : data.products || [];
-      displayProducts(products);
-    }
 
-    function displayProducts(products) {
       if (!products.length) {
-        productListContainer.innerHTML = "<p>No products found.</p>";
+        productList.innerHTML = "<p>No products found.</p>";
         return;
       }
 
-      productListContainer.innerHTML = products.map(p => `
+      productList.innerHTML = products.map(p => `
         <div class="product-card" data-id="${p._id}">
-          <img src="${p.image}" alt="${p.name}" crossOrigin="anonymous" />
+          <img src="${p.image}">
           <h3>${p.name}</h3>
-          <p><strong>Model:</strong> ${p.model}</p>
-          <p><strong>Category:</strong> ${p.category}</p>
-          <p><strong>Price:</strong> PKR ${p.price}</p>
-          <p><strong>Units:</strong> ${p.units}</p>
-          <p><strong>Warranty:</strong> ${p.warranty}</p>
+          <p><b>Model:</b> ${p.model}</p>
+          <p><b>Category:</b> ${p.category}</p>
+          <p><b>Price:</b> PKR ${p.price}</p>
+          <p><b>Units:</b> ${p.units}</p>
+          <p><b>Warranty:</b> ${p.warranty}</p>
           <p>${p.description}</p>
           <button class="edit-btn">Edit</button>
           <button class="delete-btn">Delete</button>
         </div>
       `).join("");
 
-      document.querySelectorAll(".edit-btn").forEach(btn => {
-        btn.addEventListener("click", e => editProduct(e.target.closest(".product-card").dataset.id));
-      });
+      document.querySelectorAll(".edit-btn").forEach(btn =>
+        btn.onclick = () => editProduct(btn.closest(".product-card").dataset.id)
+      );
 
-      document.querySelectorAll(".delete-btn").forEach(btn => {
-        btn.addEventListener("click", e => deleteProduct(e.target.closest(".product-card").dataset.id));
-      });
+      document.querySelectorAll(".delete-btn").forEach(btn =>
+        btn.onclick = () => deleteProduct(btn.closest(".product-card").dataset.id)
+      );
     }
 
     async function editProduct(id) {
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:5000/api/products/${id}`, {
-        headers: { "Authorization": "Bearer " + token }
-      });
-      const p = await res.json();
+  try {
 
-      document.getElementById("itemName").value = p.name;
-      document.getElementById("itemModel").value = p.model;
-      document.getElementById("itemCategory").value = p.category;
-      document.getElementById("itemWarranty").value = p.warranty;
-      document.getElementById("itemUnits").value = p.units;
-      document.getElementById("itemPrice").value = p.price;
-      document.getElementById("itemDescription").value = p.description;
-      document.getElementById("editProductId").value = p._id;
+    const res = await fetch(`${API_URL}/${id}`, {
+      headers: { Authorization: "Bearer " + token }
+    });
 
-      if (p.image) {
-        document.getElementById("currentImageContainer").style.display = "block";
-        document.getElementById("currentImage").src = p.image;
-      } else {
-        document.getElementById("currentImageContainer").style.display = "none";
-      }
+    const result = await res.json();
 
-      document.getElementById("itemImage").required = false;
-      document.getElementById("formBtn").textContent = "Update Item";
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    if (!result.success) {
+      alert(result.message || "Failed to fetch product");
+      return;
     }
 
+    const p = result.data;
+
+    document.getElementById("itemName").value = p.name || "";
+    document.getElementById("itemModel").value = p.model || "";
+    document.getElementById("itemCategory").value = p.category || "";
+    document.getElementById("itemWarranty").value = p.warranty || "";
+    document.getElementById("itemUnits").value =
+      Number.isFinite(p.units) ? p.units : "";
+    document.getElementById("itemPrice").value =
+      Number.isFinite(p.price) ? p.price : "";
+    document.getElementById("itemDescription").value = p.description || "";
+    document.getElementById("editProductId").value = p._id;
+
+    if (p.image) {
+      currentImageContainer.style.display = "block";
+      currentImage.src = p.image;
+    } else {
+      currentImageContainer.style.display = "none";
+    }
+
+    itemImage.required = false;
+    formBtn.textContent = "Update Item";
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+  } catch (err) {
+    console.error("Edit Product Error:", err);
+    alert("Something went wrong while editing");
+  }
+}
+
+
+
+    /* DELETE PRODUCT */
     async function deleteProduct(id) {
       if (!confirm("Delete this product?")) return;
-      const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const res = await fetch(`${API_URL}/${id}`, {
         method: "DELETE",
-        headers: { "Authorization": "Bearer " + token }
+        headers: { Authorization: "Bearer " + token }
       });
-      const data = await res.json();
-      if (res.ok) {
-        alert("Product deleted");
-        loadProducts();
-      } else alert(data.message || "Delete failed");
+      if (!res.ok) { alert("Delete failed"); return; }
+      alert("Product deleted");
+      loadProducts();
     }
 
+    /* RESET FORM */
     function resetForm() {
-      document.getElementById("addItemForm").reset();
-      document.getElementById("editProductId").value = "";
-      document.getElementById("formBtn").textContent = "Add Item";
-      document.getElementById("itemImage").required = true;
-      document.getElementById("itemModel").required = true;
-      document.getElementById("currentImageContainer").style.display = "none";
+      form.reset();
+      editProductId.value = "";
+      formBtn.textContent = "Add Item";
+      itemImage.required = true;
+      currentImageContainer.style.display = "none";
     }
+
   </script>
 </body>
 </html>

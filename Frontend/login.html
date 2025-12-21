@@ -178,8 +178,7 @@
       </div>
     </div>
   </div>
-
-  <script type="module">
+<script type="module">
   import { apiPost } from "./js/api.js";
   import "./js/sessionCheck.js";
 
@@ -201,42 +200,53 @@
     try {
       const data = await apiPost("/auth/login", { email, password });
 
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("role", data.user.role);
 
-        const sessionExpiry = Date.now() +  20 * 60 * 1000; // 20 minutes
-        localStorage.setItem("sessionExpiry", sessionExpiry);
+if (data.success && data.token) {
+  const userData = {
+    id: data.user.id || data.user.userId,
+    userId: data.user.id || data.user.userId,
+    role: data.user.role,
+    name: data.user.name,
+    email: data.user.email
+  };
+  
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("user", JSON.stringify(userData)); 
+  
 
-        switch (data.user.role) {
-          case "employee":
-            window.location.href = "employee/AddCustomer.html";
-            break;
-          case "finance":
-            window.location.href = "FinanceManager/financeInstallments.html";
-            break;
-          case "customer":
-            window.location.href = "Customer/viewProducts.html";
-            break;
-          case "inventory":
-            window.location.href = "Inventory/addItem.html";
-            break;
-          case "admin":
-            window.location.href = "Admin/adminProduct.html";
-            break;
-          default:
-            errorMsg.textContent = "Unknown role";
-        }
-      } else {
-        errorMsg.textContent = data.message;
+  const sessionExpiry = Date.now() + 20 * 60 * 1000;
+  localStorage.setItem("sessionExpiry", sessionExpiry);
+
+  switch (data.user.role) {
+    case "employee":
+      window.location.href = "employee/AddCustomer.html";
+      break;
+    case "finance":
+      window.location.href = "FinanceManager/financeInstallments.html";
+      break;
+    case "customer":
+      window.location.href = "Customer/viewProducts.html";
+      break;
+    case "inventory":
+      window.location.href = "Inventory/addItem.html";
+      break;
+    case "admin":
+      window.location.href = "Admin/adminProduct.html";
+      break;
+    default:
+      errorMsg.textContent = "Unknown role: " + data.user.role;
+  }
+} else {
+        errorMsg.textContent = data.message || "Login failed";
+        console.error("Login failed:", data);
       }
+      
     } catch (err) {
       errorMsg.textContent = "Server error, try again later.";
-      console.error(err);
+      console.error("Login catch error:", err);
     }
   });
 </script>
-
 
 </body>
 

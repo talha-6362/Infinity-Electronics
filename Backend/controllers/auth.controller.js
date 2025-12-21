@@ -37,36 +37,57 @@ export const loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "User not found" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid password" });
-
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" } 
-    );
-
-    
-    res.cookie("token", token, {
-      httpOnly: true,       
-      secure: false,        
-      maxAge: 2 * 60 * 1000 
+    if (!user) return res.status(400).json({ 
+      success: false,
+      message: "User not found" 
     });
 
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ 
+      success: false,
+      message: "Invalid password" 
+    });
+
+    const token = jwt.sign(
+      { 
+        userId: user._id.toString(),  
+        role: user.role,
+        email: user.email,
+        name: user.name
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }  
+    );
+
+    res.cookie("token", token, {
+      httpOnly: true,       
+      secure: process.env.NODE_ENV === "production", // Production mein true
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      sameSite: "lax"
+    });
+
+    // ✅ **IMPORTANT: Consistent response format**
     res.json({
+      success: true,
       message: "Login successful",
       token,
       user: {
-        id: user._id,
+        id: user._id.toString(),
+        userId: user._id.toString(), // ✅ Frontend compatibility
         name: user.name,
         email: user.email,
-        role: user.role
+        role: user.role,
+        phone: user.phone,
+        city: user.city,
+        address: user.address
       }
     });
+    
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ 
+      success: false,
+      message: "Server error" 
+    });
   }
 };

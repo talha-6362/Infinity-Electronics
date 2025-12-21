@@ -60,14 +60,33 @@ export const authorizeRoles = (...roles) => (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    if (!roles.includes(decoded.role)) {
-      return res.status(403).json({ message: "Access denied: insufficient permissions" });
+    
+    // ✅ FIX: Check both id and userId
+    if (!decoded.role || !(decoded.userId || decoded.id)) {
+      return res.status(401).json({ message: "Invalid token structure" });
     }
 
-    req.user = decoded; 
+    if (!roles.includes(decoded.role)) {
+      return res.status(403).json({ 
+        message: "Access denied: insufficient permissions",
+        yourRole: decoded.role,
+        requiredRoles: roles 
+      });
+    }
+
+    // ✅ FIX: Create consistent user object
+    req.user = {
+      userId: decoded.userId || decoded.id,  // ✅ Both supported
+      role: decoded.role,
+      email: decoded.email,
+      name: decoded.name
+    };
+    
+    console.log("Authorized user:", req.user);  // Debug
+    
     next();
   } catch (err) {
+    console.error("Token verification error:", err);
     return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
