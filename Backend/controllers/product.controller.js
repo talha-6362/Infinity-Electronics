@@ -32,7 +32,6 @@ export const createProduct = async (req, res) => {
 
     let imageUrl = null;
     if (req.file) {
-      console.log("Uploading image to Cloudinary...");
       
       try {
         const result = await cloudinary.uploader.upload(req.file.path, {

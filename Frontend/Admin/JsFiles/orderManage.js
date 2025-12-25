@@ -1,9 +1,8 @@
 import { BASE_URL, apiPut } from "../../js/api.js";
 import "../../js/sessionCheck.js";
 const token = localStorage.getItem("token");
-const role = localStorage.getItem("role");
 
-if (!token || role !== "admin") {
+if (!token) {
   alert("Unauthorized access!");
   window.location.href = "../../login.html";
 }

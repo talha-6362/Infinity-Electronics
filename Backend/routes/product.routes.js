@@ -20,7 +20,6 @@ router.post("/", authorizeRoles("admin", "inventory"), upload.single("image"), c
 
 router.put("/:id", authorizeRoles("admin"), upload.single("image"), updateProduct);
 
-// router.delete("/:id", authorizeRoles("admin"), deleteProduct);
 router.delete("/:id", 
   authorizeRoles("admin", "inventory"),  
   deleteProduct

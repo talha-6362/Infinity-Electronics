@@ -2,10 +2,8 @@
 import User from "../models/User.js";
 
 export const getUsers = async (req, res) => {
-  console.log("GET /users called by:", req.user); 
   try {
     const users = await User.find({}, "email role"); 
-    console.log("Users fetched:", users); 
     res.json(users);
   } catch (err) {
     console.error("Get users error:", err);

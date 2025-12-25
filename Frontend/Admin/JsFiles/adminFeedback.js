@@ -2,6 +2,10 @@ import { BASE_URL } from "../../js/api.js";
 import "../../js/sessionCheck.js";
 const feedbackList = document.getElementById("feedbackList");
 const token = localStorage.getItem("token"); 
+if (!token) {
+  alert("Unauthorized access!");
+  window.location.href = "../../login.html";
+}
 
 async function loadFeedbacks() {
   try {
